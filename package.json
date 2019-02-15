@@ -1,0 +1,16 @@
+{
+  "name": "linto-utility",
+  "version": "1.0.0",
+  "description": "Utility skills for linto skills",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "linto",
+    "skills",
+    "utility"
+  ],
+  "author": "yhoupert@linagora.com",
+  "license": "ISC"
+}
