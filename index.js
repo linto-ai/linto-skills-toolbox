@@ -134,11 +134,6 @@ class Utility {
         }
         return false
     }
-
-    test(){
-        console.log('test')
-        return 'test'
-    }
 }
 
 module.exports = new Utility()
