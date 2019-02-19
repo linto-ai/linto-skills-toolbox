@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) 2017 Linagora.
+ *
+ * This file is part of Business-Logic-Server
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 class Utility {
     constructor() {}
 
@@ -6,11 +25,26 @@ class Utility {
      * 
      * @param {string} toSay string that linto gonna say
      * 
-     * @returns {Object} ouptut to put in the msg.payload
+     * @returns {Object} format json that linto gonna read to saying stuff
      */
-    formatToSay(toSay){
+    formatToSay(toSay) {
         return {
             behavior: toSay
+        }
+    }
+
+    /**
+     * @summary a text that will be ask by linto
+     *
+     * @param {string} toAsk string that linto gonna say
+     * @param {Objet} data data to send at linto
+     *
+     * @returns {Object} format json that linto gonna read to asking stuff
+     */
+    formatToAsk(toAsk, data) {
+        return {
+            ask: toAsk,
+            conversationData: data
         }
     }
 
@@ -124,7 +158,7 @@ class Utility {
      * 
      * @returns {Boolean} Give the information if all entities is here
      **/
-    checkEntitiesRequire(payload, requireArrayEntities) {
+    checkEntitiesRequire(payload, requireArrayEntities = []) {
         if (payload.nlu.entitiesNumber === requireArrayEntities.length) {
             for (let entity of payload.nlu.entities) {
                 if (requireArrayEntities.indexOf(entity.entity) === -1)
