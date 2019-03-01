@@ -17,8 +17,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const PopulateSkills = require('./populate')
+
 class Utility {
-    constructor() {}
+    constructor() {
+        this.populate = PopulateSkills
+    }
 
     /**
      * @summary a text that will be say by linto
@@ -168,6 +172,35 @@ class Utility {
         }
         return false
     }
+
+    /**
+     * @summary Add the data to the NLU
+     *
+     * @param {Object} tockConfig configuration about the tock data given by linto-admin, contains user, password and url
+     * @param {String} applicationName the input message payload receive from the flow
+     * @param {String} skillsDataPath the path file to upload file
+     *
+     * @returns {Boolean} the result status of the NLU (Natural Language Understanding) injection
+     **/
+    populateNluSkills(tockConfig, applicationName, skillsDataPath) {
+        if (tockConfig.url !== undefined && tockConfig.authToken !== undefined)
+            return this.populate.injectNlu(tockConfig, applicationName, skillsDataPath)
+        return false
+    }
+
+    /**
+     * @summary Add the data to the LM
+     *
+     * @param {String} applicationName the input message payload receive from the flow
+     * @param {String} skillsDataPath the path file to upload file
+     *
+     * @returns {Boolean} the result status of the LM (Language Model) injection
+     **/
+    populateLmSkills(applicationName, skillsDataPath) {
+        if (process.env.IS_ADMIN)
+            this.populate.injectLm(applicationName, skillsDataPath)
+    }
+
 }
 
 module.exports = new Utility()
