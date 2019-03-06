@@ -25,7 +25,9 @@ const REGEX_WORD = new RegExp('\\[(.*?)\\]')
 const REGEX_ENTITY = new RegExp('\\((.*?)\\)')
 
 const PREFIX = "app:"
-const INTENT_SEPARATOR = '##'
+const SEPARATOR = '##'
+const INTENT_SEPARATOR = '##intent'
+const ENTITIE_SEPARATOR = '##entitie'
 
 class NluParser {
   constructor() {
@@ -33,12 +35,14 @@ class NluParser {
   }
 
   process(applicatioName, pathFile) {
-    let intent
-    let language
+    let intent, language, entitieKey, isIntent = false,
+      isEntitie = false
     let output = {
       applicationName: PREFIX + applicatioName,
       sentences: []
     }
+    let entities = {}
+
     return new Promise((resolve, reject) => {
       readline.createInterface({
         input: fs.createReadStream(pathFile)
@@ -46,37 +50,90 @@ class NluParser {
         if (line.indexOf(INTENT_SEPARATOR) > -1) {
           intent = PREFIX + line.split(':')[1]
           language = line.split(':')[2]
+          isIntent = true
+          isEntitie = false
+        } else if (line.indexOf(ENTITIE_SEPARATOR) > -1) {
+          entitieKey = line.split(':')[1]
+          language = line.split(':')[2]
+          isEntitie = true
+          isIntent = false
         } else if (line.length !== 0) {
-
-          line = line.replace('- ', '')
-          let mySentence = {
-            intent: intent,
-            entities: [],
-            language
+          if (isIntent) {
+            let mySentence = manageIntent(line, intent, language)
+            output.sentences.push(mySentence)
+          } else if (isEntitie) {
+            entities = manageEntitie(line, entitieKey, entities, language)
           }
-
-          let text = line
-          for (let i = 0; i < (line.split("](").length - 1); i++) {
-            let word = text.match(REGEX_WORD)
-            let entity = text.match(REGEX_ENTITY)
-            mySentence.entities.push({
-              "entity": PREFIX + entity[1],
-              "role": entity[1],
-              "subEntities": [],
-              "start": word.index,
-              "end": word.index + word[1].length
-            })
-
-            text = text.replace(word[0] + entity[0], word[1])
-          }
-          mySentence.text = text
-          output.sentences.push(mySentence)
         }
       }).on('close', () => {
+        output = mergeData(output, entities)
         resolve(output)
       })
     });
   }
+}
+
+let mergeData = function (inputSentences, entitiesList) {
+  if (Object.keys(entitiesList).length === 0)
+    return inputSentences
+
+  let output = inputSentences
+  inputSentences.sentences.forEach(function (sentence) {
+    var keysList = Object.keys(entitiesList[sentence.language]);
+    sentence.entities.forEach(function (sentenceEntitie) {
+      if (keysList.includes(sentenceEntitie.role)) {
+        entitiesList[sentence.language][sentenceEntitie.role].forEach(function (entitieValue) {
+          var mdMatchRegex = new RegExp("\\[([^\\]]+)]\\((" + sentenceEntitie.role + ")(\\))");
+          let newValue = '[' + entitieValue + '](' + sentenceEntitie.role + ')'
+          let newLine = sentence.origin.replace(mdMatchRegex, newValue)
+
+          let mySentence = manageIntent(newLine, sentence.intent, sentence.language)
+          output.sentences.push(mySentence)
+        })
+      }
+    })
+  });
+
+  return output
+}
+
+let manageEntitie = function (line, entitieKey, entities, language) {
+  line = line.replace('- ', '')
+  if (entities[language] === undefined) {
+    entities[language] = {}
+  }
+  if (entities[language][entitieKey] === undefined)
+    entities[language][entitieKey] = []
+  entities[language][entitieKey].push(line)
+
+  return entities
+}
+
+let manageIntent = function (line, intent, language) {
+  line = line.replace('- ', '')
+  let mySentence = {
+    intent,
+    entities: [],
+    language
+  }
+
+  let text = line
+  for (let i = 0; i < (line.split("](").length - 1); i++) {
+    let word = text.match(REGEX_WORD)
+    let entity = text.match(REGEX_ENTITY)
+    mySentence.entities.push({
+      "entity": PREFIX + entity[1],
+      "role": entity[1],
+      "subEntities": [],
+      "start": word.index,
+      "end": word.index + word[1].length
+    })
+
+    text = text.replace(word[0] + entity[0], word[1])
+  }
+  mySentence.text = text
+  mySentence.origin = line
+  return mySentence
 }
 
 module.exports = NluParser
