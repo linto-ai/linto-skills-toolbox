@@ -17,15 +17,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const debug = require('debug')('utility:populate:nlu')
+
 const request = require('request')
-const fs = require('fs')
+const fs = require('fs'),
+  tempFs = require('fs-temp')
+const ParserLm = require('../parser/lmParser')
 
 class PopulateLm {
-  constructor() {}
+  constructor() {
+    this.parser = new ParserLm()
+  }
 
-  inject(host, applicationName, filePath) {
-    this.host
+  inject(lmData, filePath) {
+    this.parser.process(filePath)
+      .then((parsedJson) => {
+        debug(parsedJson)
 
+        let path = tempFs.writeFileSync(Buffer.from(JSON.stringify(parsedJson)))
+        //this.getRequest('POST', lmData.url, path)
+      })
   }
 
   getRequest(method, url, filePath) {

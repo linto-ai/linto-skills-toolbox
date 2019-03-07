@@ -23,9 +23,9 @@ const fs = require('fs'),
 
 const REGEX_WORD = new RegExp('\\[(.*?)\\]')
 const REGEX_ENTITY = new RegExp('\\((.*?)\\)')
+const DEFAULT_LANGUAGE = 'fr'
 
 const PREFIX = "app:"
-const SEPARATOR = '##'
 const INTENT_SEPARATOR = '##intent'
 const ENTITIE_SEPARATOR = '##entitie'
 
@@ -97,7 +97,7 @@ let mergeData = function (inputSentences, entitiesList) {
   return output
 }
 
-let manageEntitie = function (line, entitieKey, entities, language) {
+let manageEntitie = function (line, entitieKey, entities, language = DEFAULT_LANGUAGE) {
   line = line.replace('- ', '')
   if (entities[language] === undefined) {
     entities[language] = {}
@@ -109,7 +109,7 @@ let manageEntitie = function (line, entitieKey, entities, language) {
   return entities
 }
 
-let manageIntent = function (line, intent, language) {
+let manageIntent = function (line, intent, language = DEFAULT_LANGUAGE) {
   line = line.replace('- ', '')
   let mySentence = {
     intent,

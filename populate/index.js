@@ -32,8 +32,8 @@ class PopulateSkills {
     return this.populate.nlu.inject(tockConfig, applicationName, filePath)
   }
 
-  injectLm(applicationName, filePath) {
-    this.populate.lm.inject(host, applicationName, filePath)
+  injectLm(lmConfig, applicationName, filePath) {
+    this.populate.lm.inject(lmConfig, applicationName, filePath)
   }
 }
 
