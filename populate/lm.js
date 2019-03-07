@@ -44,7 +44,7 @@ class PopulateLm {
       method,
       url,
       headers: {}
-    };
+    }
 
     if (filePath !== undefined)
       options.formData = {
@@ -52,9 +52,9 @@ class PopulateLm {
       }
 
     request(options, function (error, response, body) {
-      if (error) throw new Error(error);
-      console.log(body);
-    });
+      if (error) throw new Error(error)
+      console.log(body)
+    })
   }
 }
 

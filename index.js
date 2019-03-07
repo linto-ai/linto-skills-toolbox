@@ -65,7 +65,7 @@ class Utility {
         if (language === undefined)
             language = process.env.DEFAULT_LANGUAGE
 
-        filepath = filepath.slice(0, filepath.lastIndexOf("/"));
+        filepath = filepath.slice(0, filepath.lastIndexOf("/"))
         return require(filepath + '/locales/' + language + '/' + nodeName)[nodeName].response
     }
 
@@ -192,14 +192,13 @@ class Utility {
      * @summary Add the data to the LM
      *
      * @param {Object} lmConfig configuration about the tock data given by linto-admin, contains user, password and url
-     * @param {String} applicationName the input message payload receive from the flow
      * @param {String} skillsDataPath the path file to upload file
      *
      * @returns {Boolean} the result status of the LM (Language Model) injection
      **/
-    populateLmSkills(lmConfig, applicationName, skillsDataPath) {
+    populateLmSkills(lmConfig, skillsDataPath) {
         if (lmConfig.url !== undefined)
-            this.populate.injectLm(lmConfig, applicationName, skillsDataPath)
+            this.populate.injectLm(lmConfig, skillsDataPath)
     }
 
 }

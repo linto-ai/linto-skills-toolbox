@@ -39,22 +39,23 @@ class PopulateNlu {
 
   getRequest(method, tockConfig, filePath) {
     let url = tockConfig.url + uriGetApplication
-
     var options = {
       method,
       url,
       headers: {
         authorization: tockConfig.authToken
       }
-    };
+    }
 
     if (filePath !== undefined)
-      options.formData = { data: fs.createReadStream(filePath)}
+      options.formData = {
+        data: fs.createReadStream(filePath)
+      }
 
     request(options, function (error, response, body) {
-      if (error) throw new Error(error);
-      console.log(body);
-    });
+      if (error) throw new Error(error)
+      console.log(body)
+    })
   }
 }
 module.exports = PopulateNlu

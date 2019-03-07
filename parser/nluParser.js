@@ -69,7 +69,7 @@ class NluParser {
         output = mergeData(output, entities)
         resolve(output)
       })
-    });
+    })
   }
 }
 
@@ -79,11 +79,11 @@ let mergeData = function (inputSentences, entitiesList) {
 
   let output = inputSentences
   inputSentences.sentences.forEach(function (sentence) {
-    var keysList = Object.keys(entitiesList[sentence.language]);
+    var keysList = Object.keys(entitiesList[sentence.language])
     sentence.entities.forEach(function (sentenceEntitie) {
       if (keysList.includes(sentenceEntitie.role)) {
         entitiesList[sentence.language][sentenceEntitie.role].forEach(function (entitieValue) {
-          var mdMatchRegex = new RegExp("\\[([^\\]]+)]\\((" + sentenceEntitie.role + ")(\\))");
+          var mdMatchRegex = new RegExp("\\[([^\\]]+)]\\((" + sentenceEntitie.role + ")(\\))")
           let newValue = '[' + entitieValue + '](' + sentenceEntitie.role + ')'
           let newLine = sentence.origin.replace(mdMatchRegex, newValue)
 
@@ -92,8 +92,7 @@ let mergeData = function (inputSentences, entitiesList) {
         })
       }
     })
-  });
-
+  })
   return output
 }
 
