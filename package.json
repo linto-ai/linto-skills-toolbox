@@ -1,17 +1,25 @@
 {
   "name": "linto-utility",
-  "version": "1.0.0",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=11.6.0",
+    "npm": ">=6.5.0"
+  },
   "description": "Utility skills for linto skills",
-  "main": "index.js",
+  "main": "utility.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test",
+    "start": "DEBUG=* node utility.js "
   },
   "keywords": [
     "linto",
     "skills",
     "utility"
   ],
-  "author": "yhoupert@linagora.com",
+  "author": {
+    "name": "Houpert Yoann",
+    "email": "yhoupert@linagora.com"
+  },
   "license": "ISC",
   "dependencies": {
     "debug": "^4.1.1",
@@ -19,5 +27,10 @@
     "fs-temp": "^1.1.2",
     "readline": "^1.3.0",
     "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "grunt": "^1.0.3",
+    "grunt-contrib-jshint": "^2.0.0",
+    "mocha": "^6.0.2"
   }
 }

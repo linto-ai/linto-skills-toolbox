@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const PopulateSkills = require('./populate')
+const PopulateSkills = require('./lib/populate')
 
 class Utility {
     constructor() {
@@ -32,6 +32,8 @@ class Utility {
      * @returns {Object} format json that linto gonna read to saying stuff
      */
     formatToSay(toSay) {
+        if (typeof toSay !== 'string')
+            throw 'toSay is require for linto output'
         return {
             behavior: toSay
         }
@@ -46,6 +48,10 @@ class Utility {
      * @returns {Object} format json that linto gonna read to asking stuff
      */
     formatToAsk(toAsk, data) {
+        if (typeof toAsk !== 'string')
+            throw 'toAsk is require for linto output'
+        if (data === undefined)
+            throw 'data can\'t be empty'
         return {
             ask: toAsk,
             conversationData: data
@@ -65,6 +71,10 @@ class Utility {
         if (language === undefined)
             language = process.env.DEFAULT_LANGUAGE
 
+        if (filepath === undefined || nodeName === undefined || typeof filepath !== 'string' || typeof nodeName !== 'string')
+            throw 'parameter should be a string'
+
+
         filepath = filepath.slice(0, filepath.lastIndexOf("/"))
         return require(filepath + '/locales/' + language + '/' + nodeName)[nodeName].response
     }
@@ -80,8 +90,12 @@ class Utility {
      * @returns {Object.isConversational} do the skill will execute the conversational part
      **/
     intentDetection(payload, intent, isConversationalSkill = false) {
+        if(!payload ||! intent)
+            throw 'intentDetection require parameter is missing'
+
         let output = {
-            isIntent: false
+            isIntent: false,
+            isConversational: false
         }
         if (isConversationalSkill && !!payload.conversationData && Object.keys(payload.conversationData).length !== 0 && payload.conversationData.intent === intent) {
             output.isIntent = true
@@ -107,6 +121,7 @@ class Utility {
     multipleIntentDetection(payload, intents, isConversationalSkill = false) {
         let output = {
             isIntent: false,
+            isConversational: false
         }
         if (isConversationalSkill && !!payload.conversationData && Object.keys(payload.conversationData).length !== 0 && intents.hasOwnProperty(payload.conversationData.intent)) {
             output.isIntent = true
@@ -200,7 +215,6 @@ class Utility {
         if (lmConfig.url !== undefined)
             this.populate.injectLm(lmConfig, skillsDataPath)
     }
-
 }
 
 module.exports = new Utility()
