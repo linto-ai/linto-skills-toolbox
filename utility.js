@@ -91,7 +91,7 @@ class Utility {
      **/
     intentDetection(payload, intent, isConversationalSkill = false) {
         if(!payload ||! intent)
-            throw 'intentDetection require parameter is missing'
+            throw 'required parameter are missing for detect the intent'
 
         let output = {
             isIntent: false,
