@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2018 Linagora.
+ *
+ * This file is part of Linto-Utility
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
 var assert = require("assert")
 var utility = require('../utility')
 
@@ -18,7 +38,7 @@ describe('utility multipleIntentDetection', () => {
     }
   }
 
-  it('it should be an conversational detection', function () {
+  it('it should detect a conversational intent', function () {
     let skillSearch = 'isConversational'
     const intentDetection = utility.multipleIntentDetection(intent_detection_conv_payload, intentKey, true)
     assert.ok(intentDetection.isIntent)
@@ -26,7 +46,7 @@ describe('utility multipleIntentDetection', () => {
     assert.equal(intentDetection.skill, skillSearch)
   })
 
-  it('it should be an intent detection if conversationData is empty', function () {
+  it('it should detect an intent', function () {
     let skillSearch = 'isConversational'
     let new_intent_detection_conv_payload = intent_detection_conv_payload
     new_intent_detection_conv_payload.conversationData = {}
@@ -37,7 +57,7 @@ describe('utility multipleIntentDetection', () => {
     assert.equal(intentDetection.skill, skillSearch)
   })
 
-  it('it should not be an intent, key don\'t exist ', function () {
+  it('it should not detect any intent', function () {
     let intentFakeKey = {
       fake: 'fake'
     }
@@ -50,7 +70,7 @@ describe('utility multipleIntentDetection', () => {
     assert.equal(intentDetection.isConversational, false)
   })
 
-  it('it should throws an execption', function () {
+  it('it should throws an execption if require parameter missing', function () {
     assert.throws(() => utility.multipleIntentDetection(undefined, intentKey, true))
     assert.throws(() => utility.multipleIntentDetection(undefined, intentKey))
     assert.throws(() => utility.multipleIntentDetection(intent_detection_conv_payload, undefined, true))
@@ -72,13 +92,13 @@ describe('utility intentDetection', () => {
     }
   }
 
-  it('it should be an conversational detection', function () {
+  it('it should detect a conversational intent', function () {
     const intentDetection = utility.intentDetection(intent_detection_conv_payload, intentKey.isConversational, true)
     assert.ok(intentDetection.isIntent)
     assert.ok(intentDetection.isConversational)
   })
 
-  it('it should be an intent detection if conversationData is empty', function () {
+  it('it should detect an intent', function () {
     let new_intent_detection_conv_payload = intent_detection_conv_payload
     new_intent_detection_conv_payload.conversationData = {}
 
@@ -87,19 +107,13 @@ describe('utility intentDetection', () => {
     assert.equal(intentDetection.isConversational, false)
   })
 
-  it('it should be an intent detection if is not conversationData', function () {
-    const intentDetection = utility.intentDetection(intent_detection_conv_payload, intentKey.isConversational, false)
-    assert.ok(intentDetection.isIntent)
-    assert.equal(intentDetection.isConversational, false)
-  })
-
-  it('it should not be detected with no matching intent', function () {
+  it('it should not detect any intent', function () {
     const intentDetection = utility.intentDetection(intent_detection_conv_payload, intentKey.isFake, true)
     assert.equal(intentDetection.isIntent, false)
     assert.equal(intentDetection.isConversational, false)
   })
 
-  it('it should throws an execption', function () {
+  it('it should throws an execption if require parameter missing', function () {
     assert.throws(() => utility.intentDetection(undefined, intentKey.isFake, true))
     assert.throws(() => utility.intentDetection(undefined, intentKey.isFake))
     assert.throws(() => utility.intentDetection(intent_detection_conv_payload, undefined, true))

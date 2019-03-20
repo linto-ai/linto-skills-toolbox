@@ -1,8 +1,28 @@
+/*
+ * Copyright (c) 2018 Linagora.
+ *
+ * This file is part of Linto-Utility
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
 var assert = require("assert")
 var utility = require('../utility')
 
 describe('utility formatToSay', () => {
-  it('it ok when require param is string', function () {
+  it('it should say something', function () {
     let text = 'my text'
     let payload = utility.formatToSay(text)
     assert.equal(typeof payload, 'object')
@@ -10,7 +30,7 @@ describe('utility formatToSay', () => {
     assert.equal(payload.behavior, text)
   })
 
-  it('it throws when require param is not string', function () {
+  it('it should throws when param is wrong', function () {
     assert.throws(() => utility.formatToSay())
     assert.throws(() => utility.formatToSay(20))
     assert.throws(() => utility.formatToSay({}))
@@ -19,7 +39,7 @@ describe('utility formatToSay', () => {
 })
 
 describe('utility formatToAsk', () => {
-  it('it ok when require param is given', function () {
+  it('it should ask something', function () {
     let text = 'my text'
     let data = {}
     let payload = utility.formatToAsk(text, data)
@@ -30,7 +50,7 @@ describe('utility formatToAsk', () => {
     assert.equal(payload.conversationData, data)
   })
 
-  it('it throws when format parameter is not ok', function () {
+  it('it should throws when param is wrong', function () {
     assert.throws(() => utility.formatToAsk())
     assert.throws(() => utility.formatToAsk('text'))
     assert.throws(() => utility.formatToAsk(undefined,{}))

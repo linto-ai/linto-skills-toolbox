@@ -1,6 +1,7 @@
 {
   "name": "linto-utility",
   "version": "0.0.1",
+  "license": "AGPL-3.0-or-later",
   "engines": {
     "node": ">=11.6.0",
     "npm": ">=6.5.0"
@@ -20,7 +21,6 @@
     "name": "Houpert Yoann",
     "email": "yhoupert@linagora.com"
   },
-  "license": "ISC",
   "dependencies": {
     "debug": "^4.1.1",
     "file-system": "^2.2.2",

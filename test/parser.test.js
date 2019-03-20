@@ -1,3 +1,23 @@
+/*
+ * Copyright (c) 2018 Linagora.
+ *
+ * This file is part of Linto-Utility
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
 var assert = require("assert")
 const ParserNlu = new require('../lib/parser/nluParser')
 const parser = new ParserNlu()
@@ -6,7 +26,7 @@ const appName = 'linto'
 const filePath = process.cwd() + '/test/data/parser.md'
 
 describe('parser nlu', () => {
-  it('check if the data exist', async function () {
+  it('it should contains the default structure data after a parse', async function () {
     await parser.process(appName, filePath)
       .then((dataParsed) => {
         assert.ok(dataParsed)
@@ -20,7 +40,7 @@ describe('parser nlu', () => {
       })
   })
 
-  it('check the parser first data based on data/parser.md', async function () {
+  it('it should contains these first data after parsing data/parser.md', async function () {
     await parser.process(appName, filePath)
       .then((dataParsed) => {
         assert.equal(dataParsed.sentences[0].intent, 'app:testNameIntent')
@@ -30,7 +50,7 @@ describe('parser nlu', () => {
       })
   })
 
-  it('check the parser last data based on data/parser.md', async function () {
+  it('it should contains these last data after parsing data/parser.md', async function () {
     await parser.process(appName, filePath)
       .then((dataParsed) => {
         let lastIndex = dataParsed.sentences.length -1
@@ -42,7 +62,7 @@ describe('parser nlu', () => {
       })
   })
 
-  it('file not found', async function () {
+  it('it should throw an error when file is not found', async function () {
     assert.throws(() => parser.process(appName, 'fake/path'))
     assert.throws(() => parser.process(appName, undefined))
     assert.throws(() => parser.process(undefined, filePath))
