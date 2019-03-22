@@ -39,7 +39,6 @@ describe('parser nlu', () => {
         assert.ok(dataParsed.sentences[0].origin)
       })
   })
-
   it('it should contains these first data after parsing data/parser.md', async function () {
     await parser.process(appName, filePath)
       .then((dataParsed) => {
