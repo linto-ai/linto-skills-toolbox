@@ -27,7 +27,7 @@ const filePath = process.cwd() + '/test/data/parser.md'
 
 describe('parser nlu', () => {
   it('it should contains the default structure data after a parse', async function () {
-    await parser.process(appName, filePath)
+    await parser.process(filePath)
       .then((dataParsed) => {
         assert.ok(dataParsed)
         assert.equal(dataParsed.applicationName, 'app:' + appName)
@@ -40,8 +40,9 @@ describe('parser nlu', () => {
       })
   })
   it('it should contains these first data after parsing data/parser.md', async function () {
-    await parser.process(appName, filePath)
+    await parser.process(filePath)
       .then((dataParsed) => {
+        assert.equal(dataParsed.applicationName, 'app:' + appName)
         assert.equal(dataParsed.sentences[0].intent, 'app:testNameIntent')
         assert.equal(dataParsed.sentences[0].language, 'en')
         assert.equal(dataParsed.sentences[0].text, 'here is my first input acronyme1')
@@ -50,10 +51,10 @@ describe('parser nlu', () => {
   })
 
   it('it should contains these last data after parsing data/parser.md', async function () {
-    await parser.process(appName, filePath)
+    await parser.process(filePath)
       .then((dataParsed) => {
         let lastIndex = dataParsed.sentences.length -1
-
+        assert.equal(dataParsed.applicationName, 'app:' + appName)
         assert.equal(dataParsed.sentences[lastIndex].intent, 'app:testNameIntent')
         assert.equal(dataParsed.sentences[lastIndex].language, 'fr')
         assert.equal(dataParsed.sentences[lastIndex].text, 'suivit du dernier acronymeEntitie2')
@@ -62,9 +63,7 @@ describe('parser nlu', () => {
   })
 
   it('it should throw an error when file is not found', async function () {
-    assert.throws(() => parser.process(appName, 'fake/path'))
-    assert.throws(() => parser.process(appName, undefined))
-    assert.throws(() => parser.process(undefined, filePath))
-    assert.throws(() => parser.process(undefined, 'fake/path'))
+    assert.throws(() => parser.process('fake/path'))
+    assert.throws(() => parser.process(undefined))
   })
 })

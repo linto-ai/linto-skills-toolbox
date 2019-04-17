@@ -1,3 +1,5 @@
+##application|linto
+
 ##intent|testNameIntent|en
 - here is my first input [acronyme1](acronyme)
 - here is the second input [acronyme2](acronyme)

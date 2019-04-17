@@ -90,7 +90,7 @@ class Utility {
      * @returns {Object.isConversational} do the skill will execute the conversational part
      **/
     intentDetection(payload, intent, isConversationalSkill = false) {
-        if(!payload ||! intent)
+        if (!payload || !intent)
             throw 'required parameter are missing for detect the intent'
 
         let output = {
@@ -192,14 +192,13 @@ class Utility {
      * @summary Add the data to the NLU
      *
      * @param {Object} tockConfig configuration about the tock data given by linto-admin, contains user, password and url
-     * @param {String} applicationName the input message payload receive from the flow
      * @param {String} skillsDataPath the path file to upload file
      *
      * @returns {Boolean} the result status of the NLU (Natural Language Understanding) injection
      **/
-    populateNluSkills(tockConfig, applicationName, skillsDataPath) {
+    populateNluSkills(tockConfig, skillsDataPath) {
         if (tockConfig.url !== undefined && tockConfig.authToken !== undefined)
-            return this.populate.injectNlu(tockConfig, applicationName, skillsDataPath)
+            return this.populate.injectNlu(tockConfig, skillsDataPath)
         return false
     }
 
