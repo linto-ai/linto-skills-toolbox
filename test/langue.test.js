@@ -16,48 +16,48 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+'use strict'
 
-
-var assert = require("assert")
-var utility = require('../utility')
+const assert = require('assert'),
+  utility = require('../utility')
 
 describe('utility loadLanguage', () => {
-  let outputText = '_loaded'
-  let pathTest = './test/data/'
-  let skillsTest = 'test'
+  let outputText = '_loaded',
+    pathTest = './test/data/',
+    skillsTest = 'test'
 
-  before(function () {
+  before(function() {
     process.env.DEFAULT_LANGUAGE = 'fr-FR'
   })
 
-  it('it should load the language based on process.env', function () {
-    let language = process.env.DEFAULT_LANGUAGE
-    let loadedData = utility.loadLanguage(pathTest, skillsTest)
+  it('it should load the language based on process.env', function() {
+    let language = process.env.DEFAULT_LANGUAGE,
+      loadedData = utility.loadLanguage(pathTest, skillsTest)
     assert.equal(loadedData, language + outputText)
   })
 
-  it('it should load the language based on parameter', function () {
-    let language = 'en-US'
-    let loadedData = utility.loadLanguage(pathTest, skillsTest, language)
+  it('it should load the language based on parameter', function() {
+    let language = 'en-US',
+      loadedData = utility.loadLanguage(pathTest, skillsTest, language)
     assert.equal(loadedData, language + outputText)
   })
 
-  it('it should load the language based on parameter first', function () {
+  it('it should load the language based on parameter first', function() {
     process.env.DEFAULT_LANGUAGE = 'fr-FR'
-    let language = 'en-US'
-    let loadedData = utility.loadLanguage(pathTest, skillsTest, language)
+    let language = 'en-US',
+      loadedData = utility.loadLanguage(pathTest, skillsTest, language)
     assert.equal(loadedData, language + outputText)
   })
 
 
-  it('it should throws if file don\'t exist', function () {
+  it('it should throws if file don\'t exist', function() {
     let language = 'en-US'
     assert.throws(() => utility.loadLanguage(pathTest, 'error', language))
     assert.throws(() => utility.loadLanguage(pathTest, 'error'))
     assert.throws(() => utility.loadLanguage(pathTest, 'error', 'en-EN'))
   })
 
-  it('it should throws when param is wrong', function () {
+  it('it should throws when param is wrong', function() {
     assert.throws(() => utility.loadLanguage(20, skillsTest))
     assert.throws(() => utility.loadLanguage(undefined, skillsTest))
     assert.throws(() => utility.loadLanguage(pathTest, 20))

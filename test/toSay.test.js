@@ -16,21 +16,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+'use strict'
 
-
-var assert = require("assert")
-var utility = require('../utility')
+const assert = require('assert'),
+  utility = require('../utility')
 
 describe('utility formatToSay', () => {
-  it('it should say something', function () {
-    let text = 'my text'
-    let payload = utility.formatToSay(text)
+  it('it should say something', function() {
+    let text = 'my text',
+      payload = utility.formatToSay(text)
     assert.equal(typeof payload, 'object')
     assert.equal(typeof payload.behavior, 'string')
     assert.equal(payload.behavior, text)
   })
 
-  it('it should throws when param is wrong', function () {
+  it('it should throws when param is wrong', function() {
     assert.throws(() => utility.formatToSay())
     assert.throws(() => utility.formatToSay(20))
     assert.throws(() => utility.formatToSay({}))
@@ -39,10 +39,10 @@ describe('utility formatToSay', () => {
 })
 
 describe('utility formatToAsk', () => {
-  it('it should ask something', function () {
-    let text = 'my text'
-    let data = {}
-    let payload = utility.formatToAsk(text, data)
+  it('it should ask something', function() {
+    let text = 'my text',
+      data = {},
+      payload = utility.formatToAsk(text, data)
     assert.equal(typeof payload, 'object')
     assert.equal(typeof payload.ask, 'string')
 
@@ -50,10 +50,10 @@ describe('utility formatToAsk', () => {
     assert.equal(payload.conversationData, data)
   })
 
-  it('it should throws when param is wrong', function () {
+  it('it should throws when param is wrong', function() {
     assert.throws(() => utility.formatToAsk())
     assert.throws(() => utility.formatToAsk('text'))
-    assert.throws(() => utility.formatToAsk(undefined,{}))
+    assert.throws(() => utility.formatToAsk(undefined, {}))
     assert.throws(() => utility.formatToAsk(20, {}))
   })
 })

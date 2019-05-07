@@ -10,7 +10,9 @@
   "main": "utility.js",
   "scripts": {
     "test": "mocha test",
-    "start": "DEBUG=* node utility.js "
+    "start": "DEBUG=* node utility.js ",
+    "pretest": "eslint --ignore-path .gitignore .",
+    "pretest-fix": "eslint --ignore-path .gitignore . --fix"
   },
   "keywords": [
     "linto",
@@ -29,8 +31,11 @@
     "request": "^2.88.0"
   },
   "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-strongloop": "^2.1.0",
     "grunt": "^1.0.3",
     "grunt-contrib-jshint": "^2.0.0",
-    "mocha": "^6.0.2"
+    "mocha": "^6.0.2",
+    "prettier": "^1.17.0"
   }
 }

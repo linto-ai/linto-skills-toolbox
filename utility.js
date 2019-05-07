@@ -16,30 +16,33 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+'use strict'
 
-const PopulateSkills = require('./lib/populate')
+const PopulateSkills = require('./lib/populate'),
+  WordsToNumber = require('./lib/wordsToNumber')
 
 class Utility {
-    constructor() {
-        this.populate = PopulateSkills
-    }
+  constructor() {
+    this.populate = PopulateSkills
+    this.wordsToNum = WordsToNumber
+  }
 
-    /**
+  /**
      * @summary a text that will be say by linto
-     * 
+     *
      * @param {string} toSay string that linto gonna say
-     * 
+     *
      * @returns {Object} format json that linto gonna read to saying stuff
      */
-    formatToSay(toSay) {
-        if (typeof toSay !== 'string')
-            throw 'toSay is require for linto output'
-        return {
-            behavior: toSay
-        }
+  formatToSay(toSay) {
+    if (typeof toSay !== 'string')
+      throw new Error('toSay is require for linto output')
+    return {
+      behavior: toSay
     }
+  }
 
-    /**
+  /**
      * @summary a text that will be ask by linto
      *
      * @param {string} toAsk string that linto gonna say
@@ -47,148 +50,167 @@ class Utility {
      *
      * @returns {Object} format json that linto gonna read to asking stuff
      */
-    formatToAsk(toAsk, data) {
-        if (typeof toAsk !== 'string')
-            throw 'toAsk is require for linto output'
-        if (data === undefined)
-            throw 'data can\'t be empty'
-        return {
-            ask: toAsk,
-            conversationData: data
-        }
+  formatToAsk(toAsk, data) {
+    if (typeof toAsk !== 'string')
+      throw new Error('toAsk is require for linto output')
+    if (data === undefined)
+      throw new Error('data can\'t be empty')
+    return {
+      ask: toAsk,
+      conversationData: data
     }
+  }
 
-    /** 
+  /**
      * @summary Load the json file for language
-     * 
+     *
      * @param {string} filepath the path of the current skills location
      * @param {string} nodeName the node name
      * @param {string} language language selected by the RED flow
-     * 
-     * @returns {object} language json 
+     *
+     * @returns {object} language json
      **/
-    loadLanguage(filepath, nodeName, language) {
-        if (language === undefined)
-            language = process.env.DEFAULT_LANGUAGE
+  loadLanguage(filepath, nodeName, language) {
+    if (language === undefined)
+      language = process.env.DEFAULT_LANGUAGE
 
-        if (filepath === undefined || nodeName === undefined || typeof filepath !== 'string' || typeof nodeName !== 'string')
-            throw 'parameter should be a string'
+    if (filepath === undefined || nodeName === undefined ||
+      typeof filepath !== 'string' || typeof nodeName !== 'string')
+      throw new Error('parameter should be a string')
 
 
-        filepath = filepath.slice(0, filepath.lastIndexOf("/"))
-        return require(filepath + '/locales/' + language + '/' + nodeName)[nodeName].response
-    }
+    filepath = filepath.slice(0, filepath.lastIndexOf('/'))
+    return require(filepath + '/locales/' + language + '/' + nodeName)[nodeName].response
+  }
 
-    /** 
+  /**
+     * @summaryWords to generate into number
+     *
+     * @param {string} words words to translate
+     * @param {string} language language selected by the RED flow
+     *
+     * @returns {int} integer number of the words
+     **/
+  wordsToNumber(words, language) {
+    return this.wordsToNum.wordsToNumber(words, language)
+  }
+
+  /**
      * @summary Check if the input from linto match the skills to execute
-     * 
+     *
      * @param {Object} payload the input message payload receive from the flow
      * @param {string} intent the intent keys of the current skills
-     * @param {boolean} isConversationalSkill give the information about a conversational skills or not
-     * 
+     * @param {boolean} isConversationalSkill is it a conversational skills or not
+     *
      * @returns {Object.isIntent} do the skill will need to be executed
      * @returns {Object.isConversational} do the skill will execute the conversational part
      **/
-    intentDetection(payload, intent, isConversationalSkill = false) {
-        if (!payload || !intent)
-            throw 'required parameter are missing for detect the intent'
+  intentDetection(payload, intent, isConversationalSkill = false) {
+    if (!payload || !intent)
+      throw new Error('required parameter are missing for detect the intent')
 
-        let output = {
-            isIntent: false,
-            isConversational: false
-        }
-        if (isConversationalSkill && !!payload.conversationData && Object.keys(payload.conversationData).length !== 0 && payload.conversationData.intent === intent) {
-            output.isIntent = true
-            output.isConversational = true
-        } else if ((!!payload.conversationData && Object.keys(payload.conversationData).length === 0) && payload.nlu.intent === intent) {
-            output.isIntent = true
-            output.isConversational = false
-        }
-        return output
+    let output = {
+      isIntent: false,
+      isConversational: false
     }
+    if (isConversationalSkill && !!payload.conversationData
+      && Object.keys(payload.conversationData).length !== 0
+      && payload.conversationData.intent === intent) {
+      output.isIntent = true
+      output.isConversational = true
+    } else if ((!!payload.conversationData && Object.keys(payload.conversationData).length === 0)
+      && payload.nlu.intent === intent) {
+      output.isIntent = true
+      output.isConversational = false
+    }
+    return output
+  }
 
-    /** 
+  /**
      * @summary Check if the input from linto match the multiple intent skills to execute
-     * 
+     *
      * @param {Object} payload the input message payload receive from the flow
      * @param {Objects} intents A json with all key has intent
-     * @param {boolean} isConversationalSkill give the information about a conversational skills or not
-     * 
+     * @param {boolean} isConversationalSkill is it a conversational skills or not
+     *
      * @returns {Object.isIntent} do the skill will need to be executed
      * @returns {Object.isConversational} do the skill will execute the conversational part
      * @returns {Object.skill} the name of the skill to execute
      **/
-    multipleIntentDetection(payload, intents, isConversationalSkill = false) {
-        let output = {
-            isIntent: false,
-            isConversational: false
-        }
-        if (isConversationalSkill && !!payload.conversationData && Object.keys(payload.conversationData).length !== 0 && intents.hasOwnProperty(payload.conversationData.intent)) {
-            output.isIntent = true
-            output.isConversational = true
-            output.skill = payload.conversationData.intent
-        } else if ((!!payload.conversationData && Object.keys(payload.conversationData).length === 0) && intents.hasOwnProperty(payload.nlu.intent)) {
-            output.isIntent = true
-            output.isConversational = false
-            output.skill = payload.nlu.intent
-        }
-        return output
+  multipleIntentDetection(payload, intents, isConversationalSkill = false) {
+    let output = {
+      isIntent: false,
+      isConversational: false
     }
+    if (isConversationalSkill && !!payload.conversationData
+      && Object.keys(payload.conversationData).length !== 0
+      && intents.hasOwnProperty(payload.conversationData.intent)) {
+      output.isIntent = true
+      output.isConversational = true
+      output.skill = payload.conversationData.intent
+    } else if ((!!payload.conversationData && Object.keys(payload.conversationData).length === 0)
+      && intents.hasOwnProperty(payload.nlu.intent)) {
+      output.isIntent = true
+      output.isConversational = false
+      output.skill = payload.nlu.intent
+    }
+    return output
+  }
 
-    /** 
+  /**
      * @summary Extract the first entities by prefix
-     * 
+     *
      * @param {Object} payload the input message payload receive from the flow
      * @param {String} prefix the prefix to the entitie to find
-     * 
+     *
      * @returns {Object} The entities found or nothing
      **/
-    extractEntityFromPrefix(payload, prefix) {
-        for (let entity of payload.nlu.entities) {
-            if (entity.entity.includes(prefix)) {
-                return entity
-            }
-        }
-        return undefined
+  extractEntityFromPrefix(payload, prefix) {
+    for (let entity of payload.nlu.entities) {
+      if (entity.entity.includes(prefix)) {
+        return entity
+      }
     }
+    return undefined
+  }
 
-    /** 
+  /**
      * @summary Extract the first entities by entitiesname
-     * 
+     *
      * @param {Object} payload the input message payload receive from the flow
      * @param {String} prefix the prefix to the entitie to find
-     * 
+     *
      * @returns {Object} The entities found or nothing
      **/
-    extractEntityFromType(payload, entityName) {
-        for (let entity of payload.nlu.entities) {
-            if (entity.entity === entityName) {
-                return entity
-            }
-        }
-        return undefined
+  extractEntityFromType(payload, entityName) {
+    for (let entity of payload.nlu.entities) {
+      if (entity.entity === entityName) {
+        return entity
+      }
     }
+    return undefined
+  }
 
-    /** 
+  /**
      * @summary Check if all require data is in the payload message
-     * 
+     *
      * @param {Object} payload the input message payload receive from the flow
      * @param {String} prefix the prefix to the entitie to find
-     * 
+     *
      * @returns {Boolean} Give the information if all entities is here
      **/
-    checkEntitiesRequire(payload, requireArrayEntities = []) {
-        if (payload.nlu.entitiesNumber === requireArrayEntities.length) {
-            for (let entity of payload.nlu.entities) {
-                if (requireArrayEntities.indexOf(entity.entity) === -1)
-                    return false
-            }
-            return true
-        }
-        return false
+  checkEntitiesRequire(payload, requireArrayEntities = []) {
+    if (payload.nlu.entitiesNumber === requireArrayEntities.length) {
+      for (let entity of payload.nlu.entities) {
+        if (requireArrayEntities.indexOf(entity.entity) === -1)
+          return false
+      }
+      return true
     }
+    return false
+  }
 
-    /**
+  /**
      * @summary Add the data to the NLU
      *
      * @param {Object} tockConfig configuration about the tock data given by linto-admin, contains user, password and url
@@ -196,13 +218,13 @@ class Utility {
      *
      * @returns {Boolean} the result status of the NLU (Natural Language Understanding) injection
      **/
-    populateNluSkills(tockConfig, skillsDataPath) {
-        if (tockConfig.url !== undefined && tockConfig.authToken !== undefined)
-            return this.populate.injectNlu(tockConfig, skillsDataPath)
-        return false
-    }
+  populateNluSkills(tockConfig, skillsDataPath) {
+    if (tockConfig.url !== undefined && tockConfig.authToken !== undefined)
+      return this.populate.injectNlu(tockConfig, skillsDataPath)
+    return false
+  }
 
-    /**
+  /**
      * @summary Add the data to the LM
      *
      * @param {Object} lmConfig configuration about the tock data given by linto-admin, contains user, password and url
@@ -210,10 +232,10 @@ class Utility {
      *
      * @returns {Boolean} the result status of the LM (Language Model) injection
      **/
-    populateLmSkills(lmConfig, skillsDataPath) {
-        if (lmConfig.url !== undefined)
-            this.populate.injectLm(lmConfig, skillsDataPath)
-    }
+  populateLmSkills(lmConfig, skillsDataPath) {
+    if (lmConfig.url !== undefined)
+      this.populate.injectLm(lmConfig, skillsDataPath)
+  }
 }
 
 module.exports = new Utility()

@@ -16,17 +16,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+'use strict'
 
+const assert = require('assert'),
+  ParserLm = require('../lib/parser/lmParser'),
+  parser = new ParserLm(),
 
-var assert = require("assert")
-const ParserLm = new require('../lib/parser/lmParser')
-const parser = new ParserLm()
-
-const appName = 'linto'
-const filePath = process.cwd() + '/test/data/parser.md'
+  appName = 'linto',
+  filePath = process.cwd() + '/test/data/parser.md'
 
 describe('parser lm', () => {
-  it('it should contains the default structure data after a parse', async function () {
+  it('it should contains the default structure data after a parse', async function() {
     await parser.process(filePath)
       .then((dataParsed) => {
         assert.ok(dataParsed)
@@ -51,7 +51,7 @@ describe('parser lm', () => {
       })
   })
 
-  it('it should throw an error when file is not found', async function () {
+  it('it should throw an error when file is not found', async function() {
     assert.throws(() => parser.process('fake/path'))
     assert.throws(() => parser.process(undefined))
   })

@@ -16,17 +16,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+'use strict'
 
+const assert = require('assert'),
+  ParserNlu = require('../lib/parser/nluParser'),
+  parser = new ParserNlu(),
 
-var assert = require("assert")
-const ParserNlu = new require('../lib/parser/nluParser')
-const parser = new ParserNlu()
-
-const appName = 'linto'
-const filePath = process.cwd() + '/test/data/parser.md'
+  appName = 'linto',
+  filePath = process.cwd() + '/test/data/parser.md'
 
 describe('parser nlu', () => {
-  it('it should contains the default structure data after a parse', async function () {
+  it('it should contains the default structure data after a parse', async function() {
     await parser.process(filePath)
       .then((dataParsed) => {
         assert.ok(dataParsed)
@@ -39,7 +39,7 @@ describe('parser nlu', () => {
         assert.ok(dataParsed.sentences[0].origin)
       })
   })
-  it('it should contains these first data after parsing data/parser.md', async function () {
+  it('it should contains these first data after parsing data/parser.md', async function() {
     await parser.process(filePath)
       .then((dataParsed) => {
         assert.equal(dataParsed.applicationName, 'app:' + appName)
@@ -50,19 +50,20 @@ describe('parser nlu', () => {
       })
   })
 
-  it('it should contains these last data after parsing data/parser.md', async function () {
+  it('it should contains these last data after parsing data/parser.md', async function() {
     await parser.process(filePath)
       .then((dataParsed) => {
-        let lastIndex = dataParsed.sentences.length -1
+        let lastIndex = dataParsed.sentences.length - 1,
+          lastData = dataParsed.sentences[lastIndex]
         assert.equal(dataParsed.applicationName, 'app:' + appName)
-        assert.equal(dataParsed.sentences[lastIndex].intent, 'app:testNameIntent')
-        assert.equal(dataParsed.sentences[lastIndex].language, 'fr')
-        assert.equal(dataParsed.sentences[lastIndex].text, 'suivit du dernier acronymeEntitie2')
-        assert.equal(dataParsed.sentences[lastIndex].origin, 'suivit du dernier [acronymeEntitie2](acronyme)')
+        assert.equal(lastData.intent, 'app:testNameIntent')
+        assert.equal(lastData.language, 'fr')
+        assert.equal(lastData.text, 'suivit du dernier acronymeEntitie2')
+        assert.equal(lastData.origin, 'suivit du dernier [acronymeEntitie2](acronyme)')
       })
   })
 
-  it('it should throw an error when file is not found', async function () {
+  it('it should throw an error when file is not found', async function() {
     assert.throws(() => parser.process('fake/path'))
     assert.throws(() => parser.process(undefined))
   })
