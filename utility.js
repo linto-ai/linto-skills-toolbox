@@ -53,7 +53,7 @@ class Utility {
   formatToAsk(toAsk, data) {
     if (typeof toAsk !== 'string')
       throw new Error('toAsk is require for linto output')
-    if (data === undefined)
+    if (!data)
       throw new Error('data can\'t be empty')
     return {
       ask: toAsk,
@@ -71,11 +71,10 @@ class Utility {
      * @returns {object} language json
      **/
   loadLanguage(filepath, nodeName, language) {
-    if (language === undefined)
+    if (!language)
       language = process.env.DEFAULT_LANGUAGE
 
-    if (filepath === undefined || nodeName === undefined ||
-      typeof filepath !== 'string' || typeof nodeName !== 'string')
+    if (!filepath || !nodeName || typeof filepath !== 'string' || typeof nodeName !== 'string')
       throw new Error('parameter should be a string')
 
 
@@ -171,7 +170,7 @@ class Utility {
         return entity
       }
     }
-    return undefined
+    return
   }
 
   /**
@@ -188,7 +187,7 @@ class Utility {
         return entity
       }
     }
-    return undefined
+    return
   }
 
   /**
@@ -219,9 +218,8 @@ class Utility {
      * @returns {Boolean} the result status of the NLU (Natural Language Understanding) injection
      **/
   populateNluSkills(tockConfig, skillsDataPath) {
-    if (tockConfig.url !== undefined && tockConfig.authToken !== undefined)
-      return this.populate.injectNlu(tockConfig, skillsDataPath)
-    return false
+    if (tockConfig.url && tockConfig.authToken)
+      this.populate.injectNlu(tockConfig, skillsDataPath)
   }
 
   /**
@@ -233,8 +231,21 @@ class Utility {
      * @returns {Boolean} the result status of the LM (Language Model) injection
      **/
   populateLmSkills(lmConfig, skillsDataPath) {
-    if (lmConfig.url !== undefined)
+    if (lmConfig.url)
       this.populate.injectLm(lmConfig, skillsDataPath)
+  }
+
+  /**
+     * @summary Add the data to the LM
+     *
+     * @param {Object} config configuration about the lm and nlu (see populate above)
+     * @param {Object} skillsPath json containing lm and nlu data file path
+     *
+     * @returns {Boolean} the result status of the LM (Language Model) injection
+     **/
+  populate(config, skillsPath){
+    this.populateLmSkills(config.lmConfig, skillsPath.lm)
+    this.populateNluSkills(config.nluConfig, skillsPath.nlu)
   }
 }
 
