@@ -6,7 +6,7 @@
     "node": ">=11.6.0",
     "npm": ">=6.5.0"
   },
-  "description": "Toolbox for linto skills and linto business-logic-server",
+  "description": "Toolbox used by linto-skills and linto business-logic-server",
   "main": "utility.js",
   "scripts": {
     "test": "mocha test",
