@@ -1,18 +1,25 @@
 {
-  "name": "linto-utility",
+  "name": "linto-skills-toolbox",
   "version": "0.0.1",
   "license": "AGPL-3.0-or-later",
   "engines": {
     "node": ">=11.6.0",
     "npm": ">=6.5.0"
   },
-  "description": "Utility skills for linto skills",
+  "description": "Toolbox for linto skills and linto business-logic-server",
   "main": "utility.js",
   "scripts": {
     "test": "mocha test",
     "start": "DEBUG=* node utility.js ",
     "pretest": "eslint --ignore-path .gitignore .",
     "pretest-fix": "eslint --ignore-path .gitignore . --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/linto-ai/linto-skills-toolbox.git"
+  },
+  "bugs": {
+    "url": "https://github.com/linto-ai/linto-skills-toolbox/issues"
   },
   "keywords": [
     "linto",
