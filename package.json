@@ -1,6 +1,6 @@
 {
-  "name": "linto-skills-toolbox",
-  "version": "0.0.1",
+  "name": "@linto-ai/linto-skills-toolbox",
+  "version": "0.0.3",
   "license": "AGPL-3.0-or-later",
   "engines": {
     "node": ">=11.6.0",
@@ -26,10 +26,7 @@
     "skills",
     "utility"
   ],
-  "author": {
-    "name": "Houpert Yoann",
-    "email": "yhoupert@linagora.com"
-  },
+  "author": "Houpert Yoann <yhoupert@linagora.com>",
   "dependencies": {
     "debug": "^4.1.1",
     "file-system": "^2.2.2",
@@ -40,9 +37,14 @@
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-config-strongloop": "^2.1.0",
-    "grunt": "^1.0.3",
+    "grunt": "^1.0.4",
     "grunt-contrib-jshint": "^2.0.0",
-    "mocha": "^6.0.2",
+    "mocha": "^6.1.4",
     "prettier": "^1.17.0"
+  },
+  "homepage": "https://linto.ai/",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
   }
 }
